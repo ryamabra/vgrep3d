@@ -1,3 +1,15 @@
+## Demo
+
+**Open-vocabulary detection result** (prompt: `"dell monitor"`):
+
+![Detection example](assets/detection_example.jpg)
+
+<video src="assets/detect_dell_monitor.mp4" controls width="600"></video>
+
+**Gaussian scene trajectory:**
+
+<video src="assets/gaussian_scene.mp4" controls width="600"></video>
+
 # V-GREP3D — Open-Vocabulary Object Detection in 3D Gaussian Splatting Scenes
 
 V-GREP3D is an experimental pipeline for **open-vocabulary object localization** inside photorealistic 3D Gaussian Splatting (3DGS) reconstructions.
