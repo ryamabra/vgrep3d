@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vgrep3d"
+version = "0.1.0"
+description = "Local-first open-vocabulary 3D search over Gaussian splats (SigLIP 2 + gsplat)"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "torch",
+    "numpy",
+    "transformers>=4.49",   # SigLIP 2 support
+    "opencv-python",
+    "plyfile",
+    "gsplat>=1.0",
+    "segment-anything",
+]
+
+[project.scripts]
+vgrep3d = "vgrep3d.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
