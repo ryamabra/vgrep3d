@@ -1,92 +1,43 @@
-# vgrep3d
+# V-GREP3D — Open-Vocabulary Object Detection in 3D Gaussian Splatting Scenes
 
-**Local-first, open-vocabulary 3D search over Gaussian splats.**
+V-GREP3D is an experimental pipeline for **open-vocabulary object localization** inside photorealistic 3D Gaussian Splatting (3DGS) reconstructions.
 
-`vgrep` let you search a folder of images by text, locally, with SigLIP 2.
-`vgrep3d` lifts that idea into 3D: index a Gaussian-splat scene once, then ask
-where things are and get an answer in the scene's coordinate frame.
+Given a natural-language query (e.g. `"dell monitor"`), the system:
 
-```bash
-vgrep3d index  scenes/office
-vgrep3d query  scenes/office "fire extinguisher"
-# "fire extinguisher"
-#   centroid: (1.243, 0.512, -2.881)
-#   aabb:     min=[1.1, 0.2, -3.0]  max=[1.4, 0.9, -2.7]
-#   support:  418 gaussians
-```
+1. Runs open-vocabulary 2D detection (Grounding DINO) on the original multi-view images used to train the Gaussian scene.
+2. Produces per-frame bounding boxes with confidence scores.
+3. (Future) Lifts consistent detections into a single 3D bounding volume that can be reprojected into novel views of the Gaussian field.
 
-## What it does
+The current release implements **Stage 1** (multi-view 2D open-vocab detection + visualization). Stage 2 (3D lifting via rendered depth + multi-view aggregation) is under active development.
 
-It attaches a language feature to every Gaussian *without touching the geometry
-you already trained*. Your splat still renders color exactly as before; a second,
-parallel channel carries a SigLIP 2 latent that you can query by text.
+## Features
 
-```
-                 ┌─ RGB (SH colors, frozen) ──────────────► image
- 3D Gaussians ───┤
-                 └─ latent (trainable) ──[decode]──► SigLIP feature ─┐
-                                                                     │ cosine
- text prompt ──[SigLIP 2 text tower]──► text embedding ─────────────┘
-                                                                     ▼
-                                                        per-Gaussian relevance
-                                                        → 3D centroid / AABB / heatmap
-```
+- Modal-based GPU execution (A10G)
+- Compatible with standard `gsplat` checkpoints + COLMAP sparse reconstructions
+- Open-vocabulary detection via `IDEA-Research/grounding-dino-tiny`
+- Automatic generation of annotated video with boxes, labels, and confidence scores
+- Designed for real-estate / indoor scene understanding use cases
 
-## How it works (4 additions, 0 replacements)
+## Repository Structure
 
-1. **New attribute.** Each Gaussian gets a low-dim latent (default 3-D) alongside
-   its color. Raw SigLIP vectors (~1152-D) are too big to store per-Gaussian, so
-   a small per-scene autoencoder compresses them.
-2. **Same rasterizer, extra channel.** The latent is alpha-blended by the exact
-   `gsplat` rasterization used for color — just pointed at different data.
-3. **New supervision.** Training images are preprocessed with SAM + SigLIP 2 into
-   2D feature maps; a cosine loss distills them into the field. Geometry stays
-   frozen (two-stage: RGB first, features second).
-4. **New query path (inference only).** Encode text with SigLIP 2, cosine-sim
-   against the decoded per-Gaussian features, threshold → 3D localization.
-
-## Install
+## Quick Start (Detection)
 
 ```bash
-pip install -e .
-# SAM weights (ViT-H):
-wget https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth
-```
+# from repo root
+modal run modal/run_detect.py \
+  --scene playroom_test \
+  --prompt "dell monitor" \
+  --max-images 30
+gaussian-outputs/<scene>/vgrep3d/detect/detect_<prompt>.mp4
+Requirements
 
-Needs a CUDA GPU. Developed against an A10G. `gsplat` must be built with CUDA.
+Modal account with GPU access
+Pre-trained gsplat checkpoint + COLMAP sparse model uploaded to a Modal Volume named gaussian-outputs
+Python ≥ 3.11 (local CLI only)
 
-## Scene layout
+Citation / Inspiration
+Built on top of:
 
-```
-scenes/office/
-  images/          training RGB frames
-  cameras.json     [{viewmat:4x4, K:3x3, width, height, image_stem}, ...]
-  point_cloud.ply  your trained splat (INRIA/gsplat .ply)
-```
-
-`index` writes everything else into `scenes/office/vgrep3d/`.
-
-## Status & scope
-
-This is an engineering-first reimplementation in the LangSplat / Feature-3DGS
-lineage, built to be small, single-GPU, and CLI-driven rather than to chase a
-leaderboard. The SigLIP 2 backbone (vs the usual CLIP) gives stronger
-open-vocab segmentation features; note that a SAM + SigLIP 2 feature-collection
-step also appears in SceneSplat, so the backbone choice is a sensible default,
-not the novel contribution.
-
-Known rough edges (good next-work targets):
-- **Multi-view feature inconsistency.** Per-view SAM+SigLIP maps disagree across
-  frames; this is an open problem (see VALA, SceneSplat). Swapping SAM → SAM 2
-  for mask tracking is the first lever to try.
-- Single mask scale (LangSplat uses three).
-- No relevance calibration beyond per-query min-max normalization.
-
-## Evaluation
-
-Point it at LERF-OVS or 3D-OVS and report localization accuracy / mIoU. A
-CLIP-vs-SigLIP-2 ablation on the same scenes is the cleanest quantitative story.
-
-## License
-
-MIT.
+gsplat
+Grounding DINO
+COLMAP
