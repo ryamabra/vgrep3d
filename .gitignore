@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+build/
+dist/
+# scene artifacts
+**/vgrep3d/features/
+**/vgrep3d/*.pt
+*.ply
+# model weights
+sam_vit_*.pth
