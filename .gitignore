@@ -10,3 +10,4 @@ dist/
 *.ply
 # model weights
 sam_vit_*.pth
+driving_test_ckpt.pt
