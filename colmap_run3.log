@@ -1,0 +1,31 @@
+✓ Initialized. View run at 
+https://modal.com/apps/ryanabraham20005/main/ap-BbuUTUeZZZDo6kV7uETuSW
+✓ Created objects.
+├── 🔨 Created mount 
+│   /Users/ryanabraham/Downloads/vgrep3d_extracted/modal/run_colmap.py
+├── 🔨 Created function check_colmap.
+└── 🔨 Created function run_colmap.
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.9.1
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+[colmap] 293 images in /outputs/driving_test/colmap/input
+[colmap] == feature_extractor ==
+[colmap] $ colmap feature_extractor --database_path /tmp/colmap_work/database.db --image_path /outputs/driving_test/colmap/input --ImageReader.camera_model OPENCV --ImageReader.single_camera 1 --FeatureExtraction.use_gpu 1
+
+[colmap] == sequential_matcher ==
+[colmap] $ colmap sequential_matcher --database_path /tmp/colmap_work/database.db --SequentialMatching.overlap 15 --FeatureMatching.use_gpu 1
+
+[colmap] == mapper ==
+[colmap] $ colmap mapper --database_path /tmp/colmap_work/database.db --image_path /outputs/driving_test/colmap/input --output_path /tmp/colmap_work/sparse

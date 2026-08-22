@@ -1,0 +1,124 @@
+✓ Initialized. View run at 
+https://modal.com/apps/ryanabraham1738/main/ap-ng2O9GpU7qV3qybXkt7NSE
+Building image im-rGLN0yizGphRd1KpmBPeUv
+
+=> Step 0: FROM colmap/colmap:latest
+Getting image source signatures
+Copying blob sha256:bbd547ded8681e6cfb7f05d59eb85323469245aadfc1b7be73ba43a29f5fd23c
+Copying blob sha256:32f112e3802cadcab3543160f4d2aa607b3cc1c62140d57b4f5441384f40e927
+Copying blob sha256:2cd52cbb1ebefad9b697ee1c60a7ba7ce8293404a1ad596fd257efdf0e9ec8d6
+Copying blob sha256:644e9b20358325501941bab7efe2465969b1101fd546be263fc7c2d12d2d8c6c
+Copying blob sha256:02559cd4bc8db240554ff3a4e38df5909d4745846b3e3a4df865d102f0a6d0d9
+Copying blob sha256:15a17189b2df6f2a5b84716dd422741e91bec18d40f6cd72f7dea007a02d45aa
+Copying blob sha256:16135c05ac73436a5635aed49910cb9ebd0df98b68b7327c0a583a96da0e4827
+Copying blob sha256:6e8af4fd0a071982e528b634ba99dec2474c21147f99748be708f36e10e3f4c2
+Copying blob sha256:7f7602a82106bfe07dabfc1cd3799c2b0ee0f1314f4cb28535f7f1b7c00fbec4
+Copying blob sha256:02cb0e091e334f5f0b222d9bc044d174ed386f1b30d3959d0e79ed725eb9cb15
+Copying blob sha256:9c3d619183d2383e5d618638762511e6711c112a9e8f7e50031f94b839b2c25e
+Copying config sha256:78ca2c48170f1fdeda2d5cf36b08120c14d86a5d20176c42d03f52eeec01b48b
+Writing manifest to image destination
+Unpacking OCI image
+   • unpacking rootfs ...     
+   • ... done                 
+   • unpacked image rootfs: /tmp/task-data/ta-01M0K9QPE9SKEDP8WQ332HS19B/registry-unpackES87m6
+Copied image in 1.66s
+
+=> Step 1: COPY /python/. /usr/local
+
+=> Step 2: RUN ln -s /usr/local/bin/python3 /usr/local/bin/python
+
+=> Step 3: ENV TERMINFO_DIRS=/etc/terminfo:/lib/terminfo:/usr/share/terminfo:/usr/lib/terminfo
+Saving image...
+Image saved, took 5.99s
+
+Built image im-rGLN0yizGphRd1KpmBPeUv in 56.18s
+
+
+Building image im-R4AAGezu77Wbd6bLPPdQIC
+
+=> Step 0: FROM base
+
+=> Step 1: RUN python -m pip install numpy
+Looking in indexes: http://pypi-mirror.modal.local:5555/simple
+Collecting numpy
+  Obtaining dependency information for numpy from http://pypi-mirror.modal.local:5555/simple/numpy/numpy-2.4.6-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata
+  Downloading http://pypi-mirror.modal.local:5555/simple/numpy/numpy-2.4.6-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (6.6 kB)
+Downloading http://pypi-mirror.modal.local:5555/simple/numpy/numpy-2.4.6-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.9/16.9 MB 185.9 MB/s eta 0:00:00
+Installing collected packages: numpy
+Successfully installed numpy-2.4.6
+
+[notice] A new release of pip is available: 23.2.1 -> 26.2.1
+[notice] To update, run: pip install --upgrade pip
+Saving image...
+Image saved, took 1.25s
+
+Built image im-R4AAGezu77Wbd6bLPPdQIC in 6.35s
+
+
+✓ Created objects.
+├── 🔨 Created mount 
+│   /Users/ryanabraham/Downloads/vgrep3d_extracted/modal/run_colmap.py
+├── 🔨 Created function run_colmap.
+└── 🔨 Created function check_colmap.
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.9.1
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+[colmap] 293 images in /outputs/driving_test/colmap/input
+[colmap] == feature_extractor ==
+[colmap] $ colmap feature_extractor --database_path /tmp/colmap_work/database.db --image_path /outputs/driving_test/colmap/input --ImageReader.camera_model OPENCV --ImageReader.single_camera 1 --FeatureExtraction.use_gpu 1
+
+[colmap] == sequential_matcher ==
+[colmap] $ colmap sequential_matcher --database_path /tmp/colmap_work/database.db --SequentialMatching.overlap 15 --FeatureMatching.use_gpu 1
+
+[colmap] == mapper ==
+[colmap] $ colmap mapper --database_path /tmp/colmap_work/database.db --image_path /outputs/driving_test/colmap/input --output_path /tmp/colmap_work/sparse
+
+[colmap] mapper produced 2 model(s): ['0', '1']
+[colmap] -- model 0 --
+I20260821 23:53:53.873971  4074 model.cc:440] Rigs: 1
+I20260821 23:53:53.874281  4074 model.cc:441] Cameras: 1
+I20260821 23:53:53.874316  4074 model.cc:442] Frames: 2
+I20260821 23:53:53.874334  4074 model.cc:443] Registered frames: 2
+I20260821 23:53:53.874354  4074 model.cc:445] Images: 2
+I20260821 23:53:53.874377  4074 model.cc:446] Registered images: 2
+I20260821 23:53:53.874392  4074 model.cc:448] Points: 4053
+I20260821 23:53:53.874410  4074 model.cc:449] Observations: 8106
+I20260821 23:53:53.874428  4074 model.cc:451] Mean track length: 2.000000
+I20260821 23:53:53.874444  4074 model.cc:453] Mean observations per image: 4053.000000
+I20260821 23:53:53.874459  4074 model.cc:456] Mean reprojection error: 0.479946px
+
+[colmap] -- model 1 --
+I20260821 23:53:54.461088  4095 model.cc:440] Rigs: 1
+I20260821 23:53:54.461540  4095 model.cc:441] Cameras: 1
+I20260821 23:53:54.461563  4095 model.cc:442] Frames: 292
+I20260821 23:53:54.461577  4095 model.cc:443] Registered frames: 292
+I20260821 23:53:54.461594  4095 model.cc:445] Images: 292
+I20260821 23:53:54.461615  4095 model.cc:446] Registered images: 292
+I20260821 23:53:54.461639  4095 model.cc:448] Points: 56346
+I20260821 23:53:54.461654  4095 model.cc:449] Observations: 1054284
+I20260821 23:53:54.461688  4095 model.cc:451] Mean track length: 18.710893
+I20260821 23:53:54.461717  4095 model.cc:453] Mean observations per image: 3610.561644
+I20260821 23:53:54.461737  4095 model.cc:456] Mean reprojection error: 0.448783px
+
+[colmap] best model: 1 with 292/293 images registered (99.7%)
+[colmap] wrote /outputs/driving_test/colmap/sparse/0
+
+Done: 292/293 images registered
+Pull with:
+  modal volume get gaussian-outputs driving_test/colmap/sparse/ ./driving_test_colmap_out/
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/ryanabraham1738/main/ap-ng2O9GpU7qV3qybXkt7NSE

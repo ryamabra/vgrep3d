@@ -1,0 +1,22 @@
+✓ Initialized. View run at 
+https://modal.com/apps/ryanabraham1738/main/ap-19q3r4OGl3LU7gRlH6ftTS
+Stopping app - uncaught exception raised locally: NotFoundError("Volume 'gaussian-outputs' not found in environment 'main'").
+Building image im-rGLN0yizGphRd1KpmBPeUv
+
+=> Step 0: FROM colmap/colmap:latest
+Getting image source signatures
+Copying blob sha256:bbd547ded8681e6cfb7f05d59eb85323469245aadfc1b7be73ba43a29f5fd23c
+Copying blob sha256:32f112e3802cadcab3543160f4d2aa607b3cc1c62140d57b4f5441384f40e927
+Copying blob sha256:644e9b20358325501941bab7efe2465969b1101fd546be263fc7c2d12d2d8c6c
+Copying blob sha256:02559cd4bc8db240554ff3a4e38df5909d4745846b3e3a4df865d102f0a6d0d9
+Copying blob sha256:2cd52cbb1ebefad9b697ee1c60a7ba7ce8293404a1ad596fd257efdf0e9ec8d6
+Copying blob sha256:6e8af4fd0a071982e528b634ba99dec2474c21147f99748be708f36e10e3f4c2
+Copying blob sha256:15a17189b2df6f2a5b84716dd422741e91bec18d40f6cd72f7dea007a02d45aa
+Copying blob sha256:02cb0e091e334f5f0b222d9bc044d174ed386f1b30d3959d0e79ed725eb9cb15
+Copying blob sha256:9c3d619183d2383e5d618638762511e6711c112a9e8f7e50031f94b839b2c25e
+Copying blob sha256:7f7602a82106bfe07dabfc1cd3799c2b0ee0f1314f4cb28535f7f1b7c00fbec4
+Copying blob sha256:16135c05ac73436a5635aed49910cb9ebd0df98b68b7327c0a583a96da0e4827
+time="2026-08-21T23:11:41Z" level=fatal msg="writing blob: open /tmp/.tmpTFiBOQ/oci-put-blob1963698970: no such file or directory"
+╭─ Error ────────────────────────────────────────────────────────────────────╮
+│ Volume 'gaussian-outputs' not found in environment 'main'                  │
+╰────────────────────────────────────────────────────────────────────────────╯

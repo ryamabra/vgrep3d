@@ -46,7 +46,7 @@ def detect(scene: str = "playroom_test", prompt: str = "dell monitor", max_image
     processor = AutoProcessor.from_pretrained(model_id)
     model = AutoModelForZeroShotObjectDetection.from_pretrained(model_id).to(device)
 
-    img_dir = Path("/outputs") / scene / "colmap" / "images"
+    img_dir = Path("/outputs") / scene / "colmap" / "input"
     img_paths = sorted(list(img_dir.glob("*.jpg")) + list(img_dir.glob("*.png")))[:max_images]
     print(f"Using {len(img_paths)} images")
 
@@ -66,8 +66,8 @@ def detect(scene: str = "playroom_test", prompt: str = "dell monitor", max_image
         results = processor.post_process_grounded_object_detection(
             outputs,
             inputs.input_ids,
-            threshold=0.25,
-            text_threshold=0.20,
+            threshold=0.15,
+            text_threshold=0.15,
             target_sizes=[image.size[::-1]],
         )[0]
 

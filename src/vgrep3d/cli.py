@@ -1,146 +1,212 @@
-"""vgrep3d command-line interface.
+"""vgrep CLI.
 
-Carries the vgrep idiom into 3D:
-
-    vgrep3d index  <scene_dir>            build the feature field for a scene
-    vgrep3d query  <scene_dir> "prompt"   locate the prompt in 3D
-
-A <scene_dir> is expected to contain:
-    images/            training RGB frames
-    cameras.json       per-frame {viewmat, K, width, height}  (your splat's poses)
-    point_cloud.ply    the trained splat
-
-index writes into <scene_dir>/vgrep3d/:
-    features/*.npy     2D SigLIP maps
-    autoencoder.pt     per-scene AE
-    latents.pt         trained per-Gaussian latents
+    vgrep index ~/Pictures      build or update the index
+    vgrep "golden gate bridge"  search
+    vgrep status                what is indexed
 """
 
 from __future__ import annotations
 
-import argparse
-import json
+import time
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-import numpy as np
-import torch
+import typer
+from rich.console import Console
+
+from . import index as faiss_index
+from .config import SETTINGS
+from .db import Db
+from .scan import iter_images
+
+app = typer.Typer(
+    add_completion=False,
+    help="Semantic grep for local files.",
+    # Let `vgrep "some query"` fall through to search instead of being parsed
+    # as an unknown subcommand.
+    no_args_is_help=False,
+)
+console = Console()
+err = Console(stderr=True)
 
 
-def _load_cameras(scene: Path) -> list[dict]:
-    raw = json.loads((scene / "cameras.json").read_text())
-    cams = []
-    for i, c in enumerate(raw):
-        stem = c.get("image_stem", f"{i:05d}")
-        cams.append(
-            {
-                "viewmat": torch.tensor(c["viewmat"], dtype=torch.float32),
-                "K": torch.tensor(c["K"], dtype=torch.float32),
-                "width": int(c["width"]),
-                "height": int(c["height"]),
-                "feature_path": str(scene / "vgrep3d" / "features" / f"{stem}.npy"),
-            }
-        )
-    return cams
+def _open_db() -> Db:
+    db = Db(SETTINGS.db_path)
+    db.check_model_compatibility(SETTINGS.model, SETTINGS.dim)
+    return db
 
 
-def cmd_index(args):
-    from vgrep3d.field.autoencoder import FeatureAutoencoder, train_autoencoder
-    from vgrep3d.field.feature_field import FeatureField
-    from vgrep3d.field.train import save_field, train_feature_field
-    from vgrep3d.preprocess.features import FeatureExtractorConfig, extract_dataset
+@app.command("index")
+def index_cmd(
+    root: Path = typer.Argument(..., help="Directory to index"),
+    batch: int = typer.Option(SETTINGS.batch_size, "--batch", "-b"),
+) -> None:
+    """Scan a directory and encode anything new or changed."""
+    from .encoder import Encoder, load_image
 
-    scene = Path(args.scene)
-    work = scene / "vgrep3d"
-    feat_dir = work / "features"
-    work.mkdir(exist_ok=True)
+    db = _open_db()
 
-    # 1. 2D feature maps
-    if args.reextract or not feat_dir.exists():
-        print("== extracting SigLIP 2 feature maps ==")
-        extract_dataset(
-            scene / "images",
-            feat_dir,
-            FeatureExtractorConfig(device=args.device, siglip_model=args.siglip),
-        )
+    with console.status("Scanning..."):
+        found = queued = 0
+        for p in iter_images(root):
+            found += 1
+            st = p.stat()
+            if db.upsert_file(str(p), st.st_mtime, st.st_size):
+                queued += 1
+        db.conn.commit()
+        removed = db.drop_missing()
 
-    # 2. per-scene autoencoder
-    print("== training feature autoencoder ==")
-    # infer feature dim from a saved map
-    sample = next(feat_dir.glob("*.npy"))
-    in_dim = np.load(sample).shape[-1]
-    ae = FeatureAutoencoder(in_dim=in_dim, latent_dim=args.latent_dim)
-    ae = train_autoencoder(ae, feat_dir, device=args.device)
-    torch.save({"state_dict": ae.state_dict(), "in_dim": in_dim,
-                "latent_dim": args.latent_dim}, work / "autoencoder.pt")
+    console.print(f"Found {found} images. {queued} need encoding. {removed} stale entries removed.")
 
-    # 3. feature field
-    print("== distilling features into the 3D field ==")
-    field = FeatureField.from_ply(
-        str(scene / "point_cloud.ply"),
-        latent_dim=args.latent_dim,
-        device=args.device,
-    )
-    cams = _load_cameras(scene)
-    field = train_feature_field(field, ae, cams, epochs=args.epochs, device=args.device)
-    save_field(field, work / "latents.pt")
-    print(f"done -> {work}")
+    def rebuild() -> int:
+        """Regenerate the search index from the embeddings in SQLite."""
+        vecs, ids = db.all_embeddings(SETTINGS.dim)
+        faiss_index.build(vecs, ids, SETTINGS.index_path, SETTINGS.dim)
+        return len(ids)
 
-
-def cmd_query(args):
-    from vgrep3d.field.autoencoder import FeatureAutoencoder
-    from vgrep3d.field.feature_field import FeatureField
-    from vgrep3d.field.train import load_latents
-    from vgrep3d.query.query import Query3D
-
-    scene = Path(args.scene)
-    work = scene / "vgrep3d"
-
-    ae_ckpt = torch.load(work / "autoencoder.pt", map_location=args.device)
-    ae = FeatureAutoencoder(in_dim=ae_ckpt["in_dim"], latent_dim=ae_ckpt["latent_dim"])
-    ae.load_state_dict(ae_ckpt["state_dict"])
-
-    field = FeatureField.from_ply(
-        str(scene / "point_cloud.ply"),
-        latent_dim=ae_ckpt["latent_dim"],
-        device=args.device,
-    )
-    field = load_latents(field, work / "latents.pt", device=args.device)
-
-    q = Query3D(field, ae, siglip_model=args.siglip, device=args.device)
-    res = q.locate_3d(args.prompt, threshold=args.threshold)
-    if not res["found"]:
-        print(f'"{args.prompt}": no region above threshold {args.threshold}')
+    if queued == 0:
+        # Still rebuild: the index file may be missing, stale, or from an older
+        # format even when every file is already encoded.
+        with console.status("Rebuilding index..."):
+            n = rebuild()
+        console.print(f"[dim]Index is up to date ({n} images).[/dim]")
         return
-    c = res["centroid"].tolist()
-    lo, hi = res["aabb_min"].tolist(), res["aabb_max"].tolist()
-    print(f'"{args.prompt}"')
-    print(f"  centroid: ({c[0]:.3f}, {c[1]:.3f}, {c[2]:.3f})")
-    print(f"  aabb:     min={[round(x,3) for x in lo]}  max={[round(x,3) for x in hi]}")
-    print(f"  support:  {res['num_gaussians']} gaussians")
+
+    enc = Encoder()
+    console.print(f"[dim]Encoding on {enc.device}...[/dim]")
+
+    todo = [(r["id"], r["path"]) for r in db.pending()]
+    done = 0
+    t0 = time.time()
+
+    # Decode in threads (PIL releases the GIL), encode on the main thread.
+    # Decode is usually the bottleneck, so this keeps the model fed.
+    with ThreadPoolExecutor(max_workers=SETTINGS.loader_workers) as pool:
+        for start in range(0, len(todo), batch):
+            chunk = todo[start : start + batch]
+            images = list(pool.map(lambda t: load_image(t[1]), chunk))
+
+            pairs = [(fid, img) for (fid, _), img in zip(chunk, images) if img is not None]
+            if not pairs:
+                continue
+
+            vecs = enc.encode_images([img for _, img in pairs])
+            db.save_embeddings(zip((fid for fid, _ in pairs), vecs), time.time())
+
+            done += len(pairs)
+            rate = done / max(time.time() - t0, 1e-6)
+            console.print(f"  {done}/{len(todo)}  ({rate:.1f} img/s)", end="\r")
+
+    console.print()
+    with console.status("Building index..."):
+        rebuild()
+
+    console.print(f"[green]Indexed {done} images in {time.time() - t0:.1f}s.[/green]")
+    db.close()
 
 
-def main(argv=None):
-    p = argparse.ArgumentParser(prog="vgrep3d")
-    p.add_argument("--device", default="cuda")
-    p.add_argument("--siglip", default="google/siglip2-so400m-patch14-384")
-    sub = p.add_subparsers(required=True)
+@app.command("search")
+def search_cmd(
+    query: str = typer.Argument(..., help="What you are looking for, in plain language"),
+    k: int = typer.Option(SETTINGS.top_k, "--k", "-k", help="Number of results"),
+    threshold: float = typer.Option(
+        0.0, "--min", help="Hide results below this similarity (0-1)"
+    ),
+    paths_only: bool = typer.Option(False, "--paths", help="Bare paths, for piping"),
+    open_top: bool = typer.Option(
+        False, "--open", "-o", help="Open the best match in Preview"
+    ),
+) -> None:
+    """Search the index by meaning."""
+    from .encoder import Encoder
 
-    pi = sub.add_parser("index", help="build the feature field for a scene")
-    pi.add_argument("scene")
-    pi.add_argument("--latent-dim", type=int, default=3)
-    pi.add_argument("--epochs", type=int, default=30)
-    pi.add_argument("--reextract", action="store_true")
-    pi.set_defaults(func=cmd_index)
+    db = _open_db()
+    idx = faiss_index.load(SETTINGS.index_path)
+    if idx is None or idx.ntotal == 0:
+        err.print("[yellow]Nothing indexed yet. Run `vgrep index <dir>` first.[/yellow]")
+        raise typer.Exit(1)
 
-    pq = sub.add_parser("query", help="locate a text prompt in 3D")
-    pq.add_argument("scene")
-    pq.add_argument("prompt")
-    pq.add_argument("--threshold", type=float, default=0.6)
-    pq.set_defaults(func=cmd_query)
+    qvec = Encoder().encode_text([query])[0]
+    hits = [(i, s) for i, s in faiss_index.search(idx, qvec, k) if s >= threshold]
 
-    args = p.parse_args(argv)
-    args.func(args)
+    if not hits:
+        err.print("[dim]No matches above threshold.[/dim]")
+        raise typer.Exit(1)
+
+    paths = db.paths_for(i for i, _ in hits)
+    for fid, score in hits:
+        p = paths.get(fid)
+        if not p:
+            continue
+        if paths_only:
+            print(p)
+        else:
+            # Similarity is shown because it is genuinely informative: a distinctive
+            # subject scores far higher than a vague concept, and the user deserves
+            # to see the difference rather than getting ten results that look equally
+            # confident. Thresholds come from measurement, not guesswork: on a
+            # 22-category corpus the noise floor sat around 8% and correct matches
+            # landed at 12-18%, so those are the boundaries.
+            colour = "green" if score > 0.14 else "yellow" if score > 0.10 else "dim"
+            console.print(f"[{colour}]{score:6.1%}[/{colour}]  {p}")
+
+    if open_top:
+        import subprocess
+
+        best = paths.get(hits[0][0])
+        if best:
+            subprocess.run(["open", best], check=False)
+
+    db.close()
+
+
+@app.command("status")
+def status_cmd() -> None:
+    """Show what is indexed."""
+    db = _open_db()
+    s = db.stats()
+    console.print(f"Model:   {db.get_meta('model')}")
+    console.print(f"Files:   {s['total']}")
+    console.print(f"Encoded: {s['encoded']}")
+    console.print(f"Pending: {s['total'] - s['encoded']}")
+    console.print(f"[dim]{SETTINGS.db_path}[/dim]")
+    db.close()
+
+
+@app.command("reset")
+def reset_cmd(
+    yes: bool = typer.Option(False, "--yes", "-y", help="Skip confirmation"),
+) -> None:
+    """Delete the index and start over."""
+    if not yes:
+        typer.confirm("Delete all vgrep data?", abort=True)
+    for p in (SETTINGS.db_path, SETTINGS.index_path):
+        p.unlink(missing_ok=True)
+    console.print("[green]Reset.[/green]")
+
+
+@app.callback(invoke_without_command=True)
+def main(ctx: typer.Context) -> None:
+    """Allow `vgrep "some query"` as shorthand for `vgrep search "some query"`."""
+    if ctx.invoked_subcommand is None and not ctx.args:
+        console.print(ctx.get_help())
+
+
+def run() -> None:
+    """Entry point.
+
+    Typer resolves the first argument as a subcommand name, so a bare query like
+    `vgrep "a person"` would fail as an unknown command. Rewrite argv to insert
+    the implicit `search` before handing off.
+    """
+    import sys
+
+    known = {"index", "search", "status", "reset"}
+    argv = sys.argv[1:]
+    if argv and argv[0] not in known and not argv[0].startswith("-"):
+        sys.argv.insert(1, "search")
+    app()
 
 
 if __name__ == "__main__":
-    main()
+    run()

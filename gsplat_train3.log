@@ -1,0 +1,307 @@
+✓ Initialized. View run at 
+https://modal.com/apps/ryanabraham1738/main/ap-KUIjls72Q4IfFfM61TSdGK
+Building image im-xr8o7cT3So8uiszgAgOuvq
+
+=> Step 0: FROM base
+
+=> Step 1: RUN python -m pip install PyMCubes gsplat==1.5.3 'imageio[ffmpeg]' nerfview numpy opencv-python-headless plyfile pycolmap pyyaml scikit-learn splines tensorboard torchmetrics tqdm tyro viser
+Looking in indexes: http://pypi-mirror.modal.local:5555/simple
+Collecting PyMCubes
+  Downloading http://pypi-mirror.modal.local:5555/simple/pymcubes/PyMCubes-0.1.6-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (868 bytes)
+Collecting gsplat==1.5.3
+  Downloading http://pypi-mirror.modal.local:5555/simple/gsplat/gsplat-1.5.3-py3-none-any.whl.metadata (1.1 kB)
+Collecting nerfview
+  Downloading http://pypi-mirror.modal.local:5555/simple/nerfview/nerfview-0.1.3-py3-none-any.whl.metadata (6.3 kB)
+Requirement already satisfied: numpy in /opt/conda/lib/python3.11/site-packages (2.1.2)
+Collecting opencv-python-headless
+  Downloading http://pypi-mirror.modal.local:5555/simple/opencv-python-headless/opencv_python_headless-5.0.0.93-cp37-abi3-manylinux_2_28_x86_64.whl.metadata (19 kB)
+Collecting plyfile
+  Downloading http://pypi-mirror.modal.local:5555/simple/plyfile/plyfile-1.1.5-py3-none-any.whl.metadata (43 kB)
+Collecting pycolmap
+  Downloading http://pypi-mirror.modal.local:5555/simple/pycolmap/pycolmap-4.1.1-cp311-cp311-manylinux_2_28_x86_64.whl.metadata (11 kB)
+Requirement already satisfied: pyyaml in /opt/conda/lib/python3.11/site-packages (6.0.2)
+Collecting scikit-learn
+  Downloading http://pypi-mirror.modal.local:5555/simple/scikit-learn/scikit_learn-1.9.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (11 kB)
+Collecting splines
+  Downloading http://pypi-mirror.modal.local:5555/simple/splines/splines-0.3.3-py3-none-any.whl.metadata (1.8 kB)
+Collecting tensorboard
+  Downloading http://pypi-mirror.modal.local:5555/simple/tensorboard/tensorboard-2.21.0-py3-none-any.whl.metadata (1.8 kB)
+Collecting torchmetrics
+  Downloading http://pypi-mirror.modal.local:5555/simple/torchmetrics/torchmetrics-1.9.0-py3-none-any.whl.metadata (23 kB)
+Requirement already satisfied: tqdm in /opt/conda/lib/python3.11/site-packages (4.66.5)
+Collecting tyro
+  Downloading http://pypi-mirror.modal.local:5555/simple/tyro/tyro-1.0.15-py3-none-any.whl.metadata (12 kB)
+Collecting viser
+  Downloading http://pypi-mirror.modal.local:5555/simple/viser/viser-1.1.0-py3-none-any.whl.metadata (6.2 kB)
+Collecting imageio[ffmpeg]
+  Downloading http://pypi-mirror.modal.local:5555/simple/imageio/imageio-2.37.4-py3-none-any.whl.metadata (9.6 kB)
+Requirement already satisfied: ninja in /opt/conda/lib/python3.11/site-packages (from gsplat==1.5.3) (1.11.1.1)
+Collecting jaxtyping (from gsplat==1.5.3)
+  Downloading http://pypi-mirror.modal.local:5555/simple/jaxtyping/jaxtyping-0.3.11-py3-none-any.whl.metadata (6.2 kB)
+Collecting rich>=12 (from gsplat==1.5.3)
+  Downloading http://pypi-mirror.modal.local:5555/simple/rich/rich-15.0.0-py3-none-any.whl.metadata (18 kB)
+Requirement already satisfied: torch in /opt/conda/lib/python3.11/site-packages (from gsplat==1.5.3) (2.5.1+cu124)
+Collecting scipy>=1.0.0 (from PyMCubes)
+  Downloading http://pypi-mirror.modal.local:5555/simple/scipy/scipy-1.17.1-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (62 kB)
+Requirement already satisfied: pillow>=8.3.2 in /opt/conda/lib/python3.11/site-packages (from imageio[ffmpeg]) (10.2.0)
+Collecting imageio-ffmpeg (from imageio[ffmpeg])
+  Downloading http://pypi-mirror.modal.local:5555/simple/imageio-ffmpeg/imageio_ffmpeg-0.6.0-py3-none-manylinux2014_x86_64.whl.metadata (1.5 kB)
+Requirement already satisfied: psutil in /opt/conda/lib/python3.11/site-packages (from imageio[ffmpeg]) (6.1.0)
+Collecting joblib>=1.4.0 (from scikit-learn)
+  Downloading http://pypi-mirror.modal.local:5555/simple/joblib/joblib-1.5.3-py3-none-any.whl.metadata (5.5 kB)
+Collecting narwhals>=2.0.1 (from scikit-learn)
+  Downloading http://pypi-mirror.modal.local:5555/simple/narwhals/narwhals-2.25.0-py3-none-any.whl.metadata (15 kB)
+Collecting threadpoolctl>=3.5.0 (from scikit-learn)
+  Downloading http://pypi-mirror.modal.local:5555/simple/threadpoolctl/threadpoolctl-3.6.0-py3-none-any.whl.metadata (13 kB)
+Collecting absl-py>=0.4 (from tensorboard)
+  Downloading http://pypi-mirror.modal.local:5555/simple/absl-py/absl_py-2.5.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting grpcio<2.0,>=1.74.0 (from tensorboard)
+  Downloading http://pypi-mirror.modal.local:5555/simple/grpcio/grpcio-1.83.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (3.7 kB)
+Collecting markdown>=2.6.8 (from tensorboard)
+  Downloading http://pypi-mirror.modal.local:5555/simple/markdown/markdown-3.10.3-py3-none-any.whl.metadata (5.1 kB)
+Requirement already satisfied: packaging in /opt/conda/lib/python3.11/site-packages (from tensorboard) (24.1)
+Collecting protobuf<8.0.0,>=6.31.1 (from tensorboard)
+  Downloading http://pypi-mirror.modal.local:5555/simple/protobuf/protobuf-7.36.0-cp310-abi3-manylinux2014_x86_64.whl.metadata (595 bytes)
+Requirement already satisfied: setuptools>=41.0.0 in /opt/conda/lib/python3.11/site-packages (from tensorboard) (72.1.0)
+Collecting tensorboard-data-server<0.8.0,>=0.7.0 (from tensorboard)
+  Downloading http://pypi-mirror.modal.local:5555/simple/tensorboard-data-server/tensorboard_data_server-0.7.2-py3-none-manylinux_2_31_x86_64.whl.metadata (1.1 kB)
+Collecting werkzeug>=1.0.1 (from tensorboard)
+  Downloading http://pypi-mirror.modal.local:5555/simple/werkzeug/werkzeug-3.1.8-py3-none-any.whl.metadata (4.0 kB)
+Collecting lightning-utilities>=0.15.3 (from torchmetrics)
+  Downloading http://pypi-mirror.modal.local:5555/simple/lightning-utilities/lightning_utilities-0.15.3-py3-none-any.whl.metadata (5.5 kB)
+Collecting docstring-parser>=0.16 (from tyro)
+  Downloading http://pypi-mirror.modal.local:5555/simple/docstring-parser/docstring_parser-0.18.0-py3-none-any.whl.metadata (3.5 kB)
+Collecting typeguard>=4.0.0 (from tyro)
+  Downloading http://pypi-mirror.modal.local:5555/simple/typeguard/typeguard-4.6.0-py3-none-any.whl.metadata (3.7 kB)
+Collecting typing-extensions>=4.13.0 (from tyro)
+  Downloading http://pypi-mirror.modal.local:5555/simple/typing-extensions/typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting msgspec<1.0.0,>=0.18.6 (from viser)
+  Downloading http://pypi-mirror.modal.local:5555/simple/msgspec/msgspec-0.21.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (5.8 kB)
+Requirement already satisfied: requests<3.0.0,>=2.0.0 in /opt/conda/lib/python3.11/site-packages (from viser) (2.32.3)
+Collecting rich>=12 (from gsplat==1.5.3)
+  Downloading http://pypi-mirror.modal.local:5555/simple/rich/rich-14.3.4-py3-none-any.whl.metadata (18 kB)
+Collecting trimesh<5.0.0,>=3.21.7 (from viser)
+  Downloading http://pypi-mirror.modal.local:5555/simple/trimesh/trimesh-4.12.2-py3-none-any.whl.metadata (13 kB)
+Collecting websockets<17.0.0,>=13.1 (from viser)
+  Downloading http://pypi-mirror.modal.local:5555/simple/websockets/websockets-16.1.1-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.8 kB)
+Requirement already satisfied: zstandard<1.0.0,>=0.20.0 in /opt/conda/lib/python3.11/site-packages (from viser) (0.23.0)
+Requirement already satisfied: charset-normalizer<4,>=2 in /opt/conda/lib/python3.11/site-packages (from requests<3.0.0,>=2.0.0->viser) (3.4.0)
+Requirement already satisfied: idna<4,>=2.5 in /opt/conda/lib/python3.11/site-packages (from requests<3.0.0,>=2.0.0->viser) (3.10)
+Requirement already satisfied: urllib3<3,>=1.21.1 in /opt/conda/lib/python3.11/site-packages (from requests<3.0.0,>=2.0.0->viser) (2.2.3)
+Requirement already satisfied: certifi>=2017.4.17 in /opt/conda/lib/python3.11/site-packages (from requests<3.0.0,>=2.0.0->viser) (2024.8.30)
+Collecting markdown-it-py>=2.2.0 (from rich>=12->gsplat==1.5.3)
+  Downloading http://pypi-mirror.modal.local:5555/simple/markdown-it-py/markdown_it_py-4.2.0-py3-none-any.whl.metadata (7.4 kB)
+Requirement already satisfied: pygments<3.0.0,>=2.13.0 in /opt/conda/lib/python3.11/site-packages (from rich>=12->gsplat==1.5.3) (2.18.0)
+Requirement already satisfied: filelock in /opt/conda/lib/python3.11/site-packages (from torch->gsplat==1.5.3) (3.16.1)
+Requirement already satisfied: networkx in /opt/conda/lib/python3.11/site-packages (from torch->gsplat==1.5.3) (3.4.2)
+Requirement already satisfied: jinja2 in /opt/conda/lib/python3.11/site-packages (from torch->gsplat==1.5.3) (3.1.4)
+Requirement already satisfied: fsspec in /opt/conda/lib/python3.11/site-packages (from torch->gsplat==1.5.3) (2024.10.0)
+Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.4.127 in /opt/conda/lib/python3.11/site-packages (from torch->gsplat==1.5.3) (12.4.127)
+Requirement already satisfied: nvidia-cuda-runtime-cu12==12.4.127 in /opt/conda/lib/python3.11/site-packages (from torch->gsplat==1.5.3) (12.4.127)
+Requirement already satisfied: nvidia-cuda-cupti-cu12==12.4.127 in /opt/conda/lib/python3.11/site-packages (from torch->gsplat==1.5.3) (12.4.127)
+Requirement already satisfied: nvidia-cudnn-cu12==9.1.0.70 in /opt/conda/lib/python3.11/site-packages (from torch->gsplat==1.5.3) (9.1.0.70)
+Requirement already satisfied: nvidia-cublas-cu12==12.4.5.8 in /opt/conda/lib/python3.11/site-packages (from torch->gsplat==1.5.3) (12.4.5.8)
+Requirement already satisfied: nvidia-cufft-cu12==11.2.1.3 in /opt/conda/lib/python3.11/site-packages (from torch->gsplat==1.5.3) (11.2.1.3)
+Requirement already satisfied: nvidia-curand-cu12==10.3.5.147 in /opt/conda/lib/python3.11/site-packages (from torch->gsplat==1.5.3) (10.3.5.147)
+Requirement already satisfied: nvidia-cusolver-cu12==11.6.1.9 in /opt/conda/lib/python3.11/site-packages (from torch->gsplat==1.5.3) (11.6.1.9)
+Requirement already satisfied: nvidia-cusparse-cu12==12.3.1.170 in /opt/conda/lib/python3.11/site-packages (from torch->gsplat==1.5.3) (12.3.1.170)
+Requirement already satisfied: nvidia-nccl-cu12==2.21.5 in /opt/conda/lib/python3.11/site-packages (from torch->gsplat==1.5.3) (2.21.5)
+Requirement already satisfied: nvidia-nvtx-cu12==12.4.127 in /opt/conda/lib/python3.11/site-packages (from torch->gsplat==1.5.3) (12.4.127)
+Requirement already satisfied: nvidia-nvjitlink-cu12==12.4.127 in /opt/conda/lib/python3.11/site-packages (from torch->gsplat==1.5.3) (12.4.127)
+Requirement already satisfied: triton==3.1.0 in /opt/conda/lib/python3.11/site-packages (from torch->gsplat==1.5.3) (3.1.0)
+Requirement already satisfied: sympy==1.13.1 in /opt/conda/lib/python3.11/site-packages (from torch->gsplat==1.5.3) (1.13.1)
+Requirement already satisfied: mpmath<1.4,>=1.1.0 in /opt/conda/lib/python3.11/site-packages (from sympy==1.13.1->torch->gsplat==1.5.3) (1.3.0)
+Requirement already satisfied: markupsafe>=2.1.1 in /opt/conda/lib/python3.11/site-packages (from werkzeug>=1.0.1->tensorboard) (3.0.2)
+Collecting wadler-lindig>=0.1.3 (from jaxtyping->gsplat==1.5.3)
+  Downloading http://pypi-mirror.modal.local:5555/simple/wadler-lindig/wadler_lindig-0.1.7-py3-none-any.whl.metadata (17 kB)
+Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich>=12->gsplat==1.5.3)
+  Downloading http://pypi-mirror.modal.local:5555/simple/mdurl/mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+Downloading http://pypi-mirror.modal.local:5555/simple/gsplat/gsplat-1.5.3-py3-none-any.whl (6.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.5/6.5 MB 297.8 MB/s eta 0:00:00
+Downloading http://pypi-mirror.modal.local:5555/simple/pymcubes/PyMCubes-0.1.6-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (336 kB)
+Downloading http://pypi-mirror.modal.local:5555/simple/nerfview/nerfview-0.1.3-py3-none-any.whl (19 kB)
+Downloading http://pypi-mirror.modal.local:5555/simple/opencv-python-headless/opencv_python_headless-5.0.0.93-cp37-abi3-manylinux_2_28_x86_64.whl (61.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 61.2/61.2 MB 302.7 MB/s eta 0:00:00
+Downloading http://pypi-mirror.modal.local:5555/simple/plyfile/plyfile-1.1.5-py3-none-any.whl (36 kB)
+Downloading http://pypi-mirror.modal.local:5555/simple/pycolmap/pycolmap-4.1.1-cp311-cp311-manylinux_2_28_x86_64.whl (27.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 27.8/27.8 MB 150.3 MB/s eta 0:00:00
+Downloading http://pypi-mirror.modal.local:5555/simple/scikit-learn/scikit_learn-1.9.0-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (9.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.3/9.3 MB 388.7 MB/s eta 0:00:00
+Downloading http://pypi-mirror.modal.local:5555/simple/splines/splines-0.3.3-py3-none-any.whl (17 kB)
+Downloading http://pypi-mirror.modal.local:5555/simple/tensorboard/tensorboard-2.21.0-py3-none-any.whl (5.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.5/5.5 MB 199.1 MB/s eta 0:00:00
+Downloading http://pypi-mirror.modal.local:5555/simple/torchmetrics/torchmetrics-1.9.0-py3-none-any.whl (983 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 983.4/983.4 kB 212.8 MB/s eta 0:00:00
+Downloading http://pypi-mirror.modal.local:5555/simple/tyro/tyro-1.0.15-py3-none-any.whl (215 kB)
+Downloading http://pypi-mirror.modal.local:5555/simple/viser/viser-1.1.0-py3-none-any.whl (5.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.5/5.5 MB 275.1 MB/s eta 0:00:00
+Downloading http://pypi-mirror.modal.local:5555/simple/absl-py/absl_py-2.5.0-py3-none-any.whl (137 kB)
+Downloading http://pypi-mirror.modal.local:5555/simple/docstring-parser/docstring_parser-0.18.0-py3-none-any.whl (22 kB)
+Downloading http://pypi-mirror.modal.local:5555/simple/grpcio/grpcio-1.83.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (7.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.1/7.1 MB 322.0 MB/s eta 0:00:00
+Downloading http://pypi-mirror.modal.local:5555/simple/imageio/imageio-2.37.4-py3-none-any.whl (318 kB)
+Downloading http://pypi-mirror.modal.local:5555/simple/joblib/joblib-1.5.3-py3-none-any.whl (309 kB)
+Downloading http://pypi-mirror.modal.local:5555/simple/lightning-utilities/lightning_utilities-0.15.3-py3-none-any.whl (31 kB)
+Downloading http://pypi-mirror.modal.local:5555/simple/markdown/markdown-3.10.3-py3-none-any.whl (110 kB)
+Downloading http://pypi-mirror.modal.local:5555/simple/msgspec/msgspec-0.21.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (219 kB)
+Downloading http://pypi-mirror.modal.local:5555/simple/narwhals/narwhals-2.25.0-py3-none-any.whl (467 kB)
+Downloading http://pypi-mirror.modal.local:5555/simple/protobuf/protobuf-7.36.0-cp310-abi3-manylinux2014_x86_64.whl (340 kB)
+Downloading http://pypi-mirror.modal.local:5555/simple/rich/rich-14.3.4-py3-none-any.whl (310 kB)
+Downloading http://pypi-mirror.modal.local:5555/simple/scipy/scipy-1.17.1-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (35.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 35.3/35.3 MB 416.7 MB/s eta 0:00:00
+Downloading http://pypi-mirror.modal.local:5555/simple/tensorboard-data-server/tensorboard_data_server-0.7.2-py3-none-manylinux_2_31_x86_64.whl (6.6 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.6/6.6 MB 293.1 MB/s eta 0:00:00
+Downloading http://pypi-mirror.modal.local:5555/simple/threadpoolctl/threadpoolctl-3.6.0-py3-none-any.whl (18 kB)
+Downloading http://pypi-mirror.modal.local:5555/simple/trimesh/trimesh-4.12.2-py3-none-any.whl (741 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 741.0/741.0 kB 533.2 MB/s eta 0:00:00
+Downloading http://pypi-mirror.modal.local:5555/simple/typeguard/typeguard-4.6.0-py3-none-any.whl (36 kB)
+Downloading http://pypi-mirror.modal.local:5555/simple/typing-extensions/typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+Downloading http://pypi-mirror.modal.local:5555/simple/websockets/websockets-16.1.1-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (186 kB)
+Downloading http://pypi-mirror.modal.local:5555/simple/werkzeug/werkzeug-3.1.8-py3-none-any.whl (226 kB)
+Downloading http://pypi-mirror.modal.local:5555/simple/imageio-ffmpeg/imageio_ffmpeg-0.6.0-py3-none-manylinux2014_x86_64.whl (29.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 29.5/29.5 MB 314.3 MB/s eta 0:00:00
+Downloading http://pypi-mirror.modal.local:5555/simple/jaxtyping/jaxtyping-0.3.11-py3-none-any.whl (56 kB)
+Downloading http://pypi-mirror.modal.local:5555/simple/markdown-it-py/markdown_it_py-4.2.0-py3-none-any.whl (91 kB)
+Downloading http://pypi-mirror.modal.local:5555/simple/wadler-lindig/wadler_lindig-0.1.7-py3-none-any.whl (20 kB)
+Downloading http://pypi-mirror.modal.local:5555/simple/mdurl/mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Installing collected packages: werkzeug, websockets, wadler-lindig, typing-extensions, trimesh, threadpoolctl, tensorboard-data-server, splines, scipy, pycolmap, protobuf, plyfile, opencv-python-headless, narwhals, msgspec, mdurl, markdown, joblib, imageio-ffmpeg, imageio, docstring-parser, absl-py, typeguard, scikit-learn, PyMCubes, markdown-it-py, lightning-utilities, jaxtyping, grpcio, tyro, tensorboard, rich, viser, torchmetrics, gsplat, nerfview
+  Attempting uninstall: typing-extensions
+    Found existing installation: typing_extensions 4.12.2
+    Uninstalling typing_extensions-4.12.2:
+      Successfully uninstalled typing_extensions-4.12.2
+Successfully installed PyMCubes-0.1.6 absl-py-2.5.0 docstring-parser-0.18.0 grpcio-1.83.0 gsplat-1.5.3 imageio-2.37.4 imageio-ffmpeg-0.6.0 jaxtyping-0.3.11 joblib-1.5.3 lightning-utilities-0.15.3 markdown-3.10.3 markdown-it-py-4.2.0 mdurl-0.1.2 msgspec-0.21.1 narwhals-2.25.0 nerfview-0.1.3 opencv-python-headless-5.0.0.93 plyfile-1.1.5 protobuf-7.36.0 pycolmap-4.1.1 rich-14.3.4 scikit-learn-1.9.0 scipy-1.17.1 splines-0.3.3 tensorboard-2.21.0 tensorboard-data-server-0.7.2 threadpoolctl-3.6.0 torchmetrics-1.9.0 trimesh-4.12.2 typeguard-4.6.0 typing-extensions-4.16.0 tyro-1.0.15 viser-1.1.0 wadler-lindig-0.1.7 websockets-16.1.1 werkzeug-3.1.8
+Saving image...
+Image saved, took 1.92s
+
+Built image im-xr8o7cT3So8uiszgAgOuvq in 19.48s
+
+
+Building image im-kq8W3bJpcJlmWSHxiG20PW
+
+=> Step 0: FROM base
+
+=> Step 1: RUN git clone --depth 1 --branch v1.5.3 https://github.com/nerfstudio-project/gsplat.git /root/gsplat_src
+Cloning into '/root/gsplat_src'...
+Note: switching to '937e29912570c372bed6747a5c9bf85fed877bae'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+Saving image...
+Image saved, took 1.65s
+
+Built image im-kq8W3bJpcJlmWSHxiG20PW in 5.17s
+
+
+✓ Created objects.
+├── 🔨 Created mount 
+│   /Users/ryanabraham/Downloads/vgrep3d_extracted/modal/run_gsplat_train.py
+└── 🔨 Created function train_gsplat.
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.4.1
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+[gsplat] 293 images, training for 7000 steps
+[gsplat] $ python examples/simple_trainer.py default --data_dir /tmp/gsplat_data --data_factor 1 --result_dir /tmp/gsplat_result --max_steps 7000 --disable_viewer
+Traceback (most recent call last):
+  File "/root/gsplat_src/examples/simple_trainer.py", line 18, in <module>
+    from datasets.colmap import Dataset, Parser
+  File "/root/gsplat_src/examples/datasets/colmap.py", line 10, in <module>
+    from pycolmap import SceneManager
+ImportError: cannot import name 'SceneManager' from 'pycolmap' (/opt/conda/lib/python3.11/site-packages/pycolmap/__init__.py)
+Traceback (most recent call last):
+Stopping app - uncaught exception raised locally: RuntimeError('command failed with exit code 1: python examples/simple_trainer.py default --data_dir /tmp/gsplat_data --data_factor 1 --result_dir /tmp/gsplat_result --max_steps 7000 --disable_viewer').
+  File "/pkg/modal/_runtime/container_io_manager.py", line 977, in handle_input_exception
+    yield
+  File "/pkg/modal/_container_entrypoint.py", line 187, in run_input_sync
+    values = io_context.call_function_sync()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pkg/modal/_runtime/container_io_manager.py", line 265, in call_function_sync
+    expected_value_or_values = self.finalized_function.callable(*args, **kwargs)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/run_gsplat_train.py", line 101, in train_gsplat
+    _stream_run([
+  File "/root/run_gsplat_train.py", line 60, in _stream_run
+    raise RuntimeError(f"command failed with exit code {proc.returncode}: "
+RuntimeError: command failed with exit code 1: python examples/simple_trainer.py default --data_dir /tmp/gsplat_data --data_factor 1 --result_dir /tmp/gsplat_result --max_steps 7000 --disable_viewer
+╭──────────────────── Traceback (most recent call last) ─────────────────────╮
+│ /Users/ryanabraham/Downloads/vgrep3d_extracted/modal/run_gsplat_train.py:1 │
+│ 28 in main                                                                 │
+│                                                                            │
+│   127 def main(scene: str = "driving_test", max_steps: int = 7000, data_fa │
+│ ❱ 128 │   result = train_gsplat.remote(scene=scene, max_steps=max_steps, d │
+│   129 │   print(f"\nDone: {result['n_checkpoints']} checkpoint(s) at {resu │
+│                                                                            │
+│ /Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-pac │
+│ kages/modal/_object.py:46 in wrapped                                       │
+│                                                                            │
+│    45 │   │   await self.hydrate()                                         │
+│ ❱  46 │   │   return await method(self, *args, **kwargs)                   │
+│    47                                                                      │
+│                                                                            │
+│ /Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-pac │
+│ kages/modal/_functions.py:1841 in remote                                   │
+│                                                                            │
+│   1840 │   │                                                               │
+│ ❱ 1841 │   │   return await self._call_function(args, kwargs)              │
+│   1842                                                                     │
+│                                                                            │
+│ /Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-pac │
+│ kages/modal/_functions.py:1778 in _call_function                           │
+│                                                                            │
+│   1777 │   │                                                               │
+│ ❱ 1778 │   │   return await invocation.run_function()                      │
+│   1779                                                                     │
+│                                                                            │
+│ /Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-pac │
+│ kages/modal/_functions.py:502 in run_function                              │
+│                                                                            │
+│    501 │   │   │   # No more retries left.                                 │
+│ ❱  502 │   │   │   return await _process_result(                           │
+│    503 │   │   │   │   await_response.output.result, await_response.output │
+│                                                                            │
+│ /Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-pac │
+│ kages/modal/_utils/function_utils.py:572 in _process_result                │
+│                                                                            │
+│   571 │   │   │                                                            │
+│ ❱ 572 │   │   │   raise exc_with_hints(exc)                                │
+│   573                                                                      │
+│                                                                            │
+│    ...Remote call to Modal Function (ta-01M0KDH94FCHXRBTXTT93VMWKR)...     │
+│                                                                            │
+│ /root/run_gsplat_train.py:101 in train_gsplat                              │
+│                                                                            │
+│ ❱ 101 _stream_run([                                                        │
+│                                                                            │
+│                                                                            │
+│ /root/run_gsplat_train.py:60 in _stream_run                                │
+│                                                                            │
+│ ❱ 60 raise RuntimeError(f"command failed with exit code {proc.returncode}: │
+│                                                                            │
+╰────────────────────────────────────────────────────────────────────────────╯
+RuntimeError: command failed with exit code 1: python 
+examples/simple_trainer.py default --data_dir /tmp/gsplat_data --data_factor 1
+--result_dir /tmp/gsplat_result --max_steps 7000 --disable_viewer

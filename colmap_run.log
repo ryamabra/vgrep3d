@@ -1,0 +1,99 @@
+✓ Initialized. View run at 
+https://modal.com/apps/ryanabraham20005/main/ap-b6BAisgdKfF1EKyvjuudLD
+✓ Created objects.
+├── 🔨 Created mount 
+│   /Users/ryanabraham/Downloads/vgrep3d_extracted/modal/run_colmap.py
+└── 🔨 Created function run_colmap.
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.9.1
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+[colmap] 293 images in /outputs/driving_test/colmap/input
+[colmap] == feature_extractor ==
+[colmap] $ colmap feature_extractor --database_path /tmp/colmap_work/database.db --image_path /outputs/driving_test/colmap/input --ImageReader.camera_model OPENCV --ImageReader.single_camera 1 --SiftExtraction.use_gpu 1
+
+[colmap] STDERR:
+[0;31mE20260821 22:35:49.651790    22 base_option_manager.cc:265] Failed to parse options - unrecognised option '--SiftExtraction.use_gpu'.
+[m
+Stopping app - uncaught exception raised locally: RuntimeError('feature_extractor failed with exit code 1').
+Traceback (most recent call last):
+  File "/pkg/modal/_runtime/container_io_manager.py", line 977, in handle_input_exception
+    yield
+  File "/pkg/modal/_container_entrypoint.py", line 187, in run_input_sync
+    values = io_context.call_function_sync()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pkg/modal/_runtime/container_io_manager.py", line 265, in call_function_sync
+    expected_value_or_values = self.finalized_function.callable(*args, **kwargs)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/run_colmap.py", line 71, in run_colmap
+    run([
+  File "/root/run_colmap.py", line 67, in run
+    raise RuntimeError(f"{label} failed with exit code {result.returncode}")
+RuntimeError: feature_extractor failed with exit code 1
+╭──────────────────── Traceback (most recent call last) ─────────────────────╮
+│ /Users/ryanabraham/Downloads/vgrep3d_extracted/modal/run_colmap.py:144 in  │
+│ main                                                                       │
+│                                                                            │
+│   143 def main(scene: str = "driving_test", sequential_overlap: int = 15): │
+│ ❱ 144 │   result = run_colmap.remote(scene=scene, sequential_overlap=seque │
+│   145 │   print(f"\nDone: {result['n_registered']}/{result['n_images']} im │
+│                                                                            │
+│ /Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-pac │
+│ kages/modal/_object.py:46 in wrapped                                       │
+│                                                                            │
+│    45 │   │   await self.hydrate()                                         │
+│ ❱  46 │   │   return await method(self, *args, **kwargs)                   │
+│    47                                                                      │
+│                                                                            │
+│ /Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-pac │
+│ kages/modal/_functions.py:1841 in remote                                   │
+│                                                                            │
+│   1840 │   │                                                               │
+│ ❱ 1841 │   │   return await self._call_function(args, kwargs)              │
+│   1842                                                                     │
+│                                                                            │
+│ /Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-pac │
+│ kages/modal/_functions.py:1778 in _call_function                           │
+│                                                                            │
+│   1777 │   │                                                               │
+│ ❱ 1778 │   │   return await invocation.run_function()                      │
+│   1779                                                                     │
+│                                                                            │
+│ /Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-pac │
+│ kages/modal/_functions.py:502 in run_function                              │
+│                                                                            │
+│    501 │   │   │   # No more retries left.                                 │
+│ ❱  502 │   │   │   return await _process_result(                           │
+│    503 │   │   │   │   await_response.output.result, await_response.output │
+│                                                                            │
+│ /Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/site-pac │
+│ kages/modal/_utils/function_utils.py:572 in _process_result                │
+│                                                                            │
+│   571 │   │   │                                                            │
+│ ❱ 572 │   │   │   raise exc_with_hints(exc)                                │
+│   573                                                                      │
+│                                                                            │
+│    ...Remote call to Modal Function (ta-01M0K7EHGQHMTQM985EMJZV4WR)...     │
+│                                                                            │
+│ /root/run_colmap.py:71 in run_colmap                                       │
+│                                                                            │
+│ ❱ 71 run([                                                                 │
+│                                                                            │
+│                                                                            │
+│ /root/run_colmap.py:67 in run                                              │
+│                                                                            │
+│ ❱ 67 raise RuntimeError(f"{label} failed with exit code {result.returncode │
+│                                                                            │
+╰────────────────────────────────────────────────────────────────────────────╯
+RuntimeError: feature_extractor failed with exit code 1

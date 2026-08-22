@@ -59,22 +59,19 @@ class FeatureAutoencoder(nn.Module):
 
 
 def _load_all_embeddings(feature_dir: str | Path) -> torch.Tensor:
-    """Collect the unique non-zero embeddings across all feature maps.
+    """Collect the per-mask embeddings across all compact feature maps.
 
-    Feature maps are dense [H, W, D] with many pixels sharing a mask's vector,
-    so we dedup to keep the AE training set small and balanced.
-    """
+    Each .npz stores a `table` [num_masks, D] of unique per-mask embeddings, so
+    there's nothing to dedup -- we just concatenate the tables."""
     feature_dir = Path(feature_dir)
     chunks = []
-    for p in sorted(feature_dir.glob("*.npy")):
-        fmap = np.load(p).reshape(-1, np.load(p).shape[-1])
-        nonzero = fmap[np.linalg.norm(fmap, axis=-1) > 1e-6]
-        if len(nonzero) == 0:
+    for p in sorted(feature_dir.glob("*.npz")):
+        table = np.load(p)["table"]
+        if table.shape[0] == 0:
             continue
-        uniq = np.unique(np.round(nonzero, 4), axis=0)
-        chunks.append(torch.from_numpy(uniq).float())
+        chunks.append(torch.from_numpy(table.astype(np.float32)))
     if not chunks:
-        raise RuntimeError(f"No non-zero features found in {feature_dir}")
+        raise RuntimeError(f"No non-empty feature tables found in {feature_dir}")
     return torch.cat(chunks, dim=0)
 
 
