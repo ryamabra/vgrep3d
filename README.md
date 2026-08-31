@@ -1,5 +1,7 @@
 # vgrep3d — Open-Vocabulary 3D Object Detection in Gaussian Splat Scenes
 
+📄 **[Read the paper](paper/vgrep3d-article.pdf)**
+
 > **Status: Open Problem.** This repository documents an honest attempt to build open-vocabulary 3D object detection inside Gaussian Splatting scenes using semantic feature fields. It works partially — and the parts that don't are documented so others can take it further.
 
 ---
