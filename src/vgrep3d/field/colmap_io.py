@@ -5,7 +5,7 @@ from __future__ import annotations
 import struct
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Tuple
+from typing import BinaryIO
 
 import numpy as np
 
@@ -40,12 +40,29 @@ def qvec_to_rotmat(qvec: np.ndarray) -> np.ndarray:
     ], dtype=np.float64)
 
 
-def read_next_bytes(fid, num_bytes: int, fmt: str):
+CAMERA_MODELS = {
+    0: ("SIMPLE_PINHOLE", 3),
+    1: ("PINHOLE", 4),
+    2: ("SIMPLE_RADIAL", 4),
+    3: ("RADIAL", 5),
+    4: ("OPENCV", 8),
+    5: ("OPENCV_FISHEYE", 8),
+    6: ("FULL_OPENCV", 12),
+    7: ("FOV", 5),
+    8: ("SIMPLE_RADIAL_FISHEYE", 4),
+    9: ("RADIAL_FISHEYE", 5),
+    10: ("THIN_PRISM_FISHEYE", 12),
+}
+
+
+def read_next_bytes(fid: BinaryIO, num_bytes: int, fmt: str) -> tuple:
     data = fid.read(num_bytes)
+    if len(data) != num_bytes:
+        raise EOFError(f"Expected {num_bytes} bytes, found {len(data)}")
     return struct.unpack("<" + fmt, data)
 
 
-def read_cameras_binary(path: Path) -> Dict[int, Camera]:
+def read_cameras_binary(path: Path) -> dict[int, Camera]:
     cameras = {}
     with open(path, "rb") as f:
         num_cameras = read_next_bytes(f, 8, "Q")[0]
@@ -54,14 +71,16 @@ def read_cameras_binary(path: Path) -> Dict[int, Camera]:
             model_id = read_next_bytes(f, 4, "i")[0]
             width = read_next_bytes(f, 8, "Q")[0]
             height = read_next_bytes(f, 8, "Q")[0]
-            num_params = {0: 3, 1: 4, 2: 4, 3: 5, 4: 8, 5: 8}.get(model_id, 4)
+            try:
+                model_name, num_params = CAMERA_MODELS[model_id]
+            except KeyError as exc:
+                raise ValueError(f"Unsupported COLMAP camera model id: {model_id}") from exc
             params = np.array(read_next_bytes(f, 8 * num_params, "d" * num_params))
-            model_name = {0: "SIMPLE_PINHOLE", 1: "PINHOLE", 4: "OPENCV"}.get(model_id, "PINHOLE")
             cameras[camera_id] = Camera(id=camera_id, model=model_name, width=width, height=height, params=params)
     return cameras
 
 
-def read_images_binary(path: Path) -> Dict[int, ImagePose]:
+def read_images_binary(path: Path) -> dict[int, ImagePose]:
     images = {}
     with open(path, "rb") as f:
         num_images = read_next_bytes(f, 8, "Q")[0]
@@ -92,7 +111,7 @@ def read_images_binary(path: Path) -> Dict[int, ImagePose]:
     return images
 
 
-def load_colmap_scene(sparse_dir: str | Path) -> Tuple[Dict[int, Camera], Dict[int, ImagePose]]:
+def load_colmap_scene(sparse_dir: str | Path) -> tuple[dict[int, Camera], dict[int, ImagePose]]:
     sparse_dir = Path(sparse_dir)
     cameras = read_cameras_binary(sparse_dir / "cameras.bin")
     images = read_images_binary(sparse_dir / "images.bin")
