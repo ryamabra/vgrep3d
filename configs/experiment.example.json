@@ -1,0 +1,24 @@
+{
+  "scene": "my_scene",
+  "seed": 1234,
+  "feature_extraction": {
+    "siglip_model": "google/siglip2-so400m-patch14-384",
+    "sam_model_type": "vit_h",
+    "sam_checkpoint": "sam_vit_h_4b8939.pth",
+    "min_mask_area": 400,
+    "crop_batch_size": 32
+  },
+  "field_training": {
+    "latent_dim": 16,
+    "epochs": 30,
+    "learning_rate": 0.01,
+    "views_per_epoch": null,
+    "max_gaussians": 500000
+  },
+  "query": {
+    "prompts": ["red car", "stop sign"],
+    "threshold": 0.6,
+    "min_hits": 16,
+    "aabb_percentiles": [2.0, 98.0]
+  }
+}

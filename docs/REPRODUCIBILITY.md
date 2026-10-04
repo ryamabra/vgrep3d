@@ -29,6 +29,8 @@ colmap --version
 
 Keep environment captures beside experiment outputs, not in the repository. Avoid comparing support counts between runs unless the scene checkpoint, subsampling cap, prompt, and threshold all match.
 
+Copy [`configs/experiment.example.json`](../configs/experiment.example.json) into an experiment output directory and update it with the actual values used. The file is a run-record template; current Modal commands do not consume it automatically.
+
 ## Determinism limits
 
 Set NumPy and PyTorch seeds before training when exact sampling order matters. CUDA rasterization and some reduction kernels may still be nondeterministic. Treat small numeric differences as expected and report aggregate metrics across repeated runs for method comparisons.
