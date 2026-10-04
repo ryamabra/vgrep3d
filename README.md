@@ -126,6 +126,8 @@ modal run scripts/convert_ply.py --scene your_scene
 
 ## Results
 
+See the [evaluation guide](docs/EVALUATION.md) for recommended metrics, a result-record format, and documented failure cases.
+
 ### Driving Scene (683,644 Gaussians, 292 frames)
 
 | Query | Support (Gaussians) | Centroid |
