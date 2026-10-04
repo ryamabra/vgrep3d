@@ -1,4 +1,5 @@
 import torch
+import pytest
 
 from vgrep3d.query.query import _keep_dense_core, _robust_aabb
 
@@ -20,3 +21,9 @@ def test_robust_aabb_clips_extreme_points() -> None:
 
     assert torch.all(lower >= 0)
     assert torch.all(upper < 2)
+
+
+@pytest.mark.parametrize("lo, hi", [(-1, 98), (50, 50), (99, 10), (2, 101)])
+def test_robust_aabb_rejects_invalid_percentiles(lo: float, hi: float) -> None:
+    with pytest.raises(ValueError, match="percentiles"):
+        _robust_aabb(torch.zeros((4, 3)), lo=lo, hi=hi)

@@ -60,7 +60,13 @@ def _keep_dense_core(pts: torch.Tensor, n_mad: float = 3.0, iters: int = 2) -> t
     return keep
 
 
-def _robust_aabb(pts: torch.Tensor, lo: float = 2.0, hi: float = 98.0):
+def _robust_aabb(
+    pts: torch.Tensor, lo: float = 2.0, hi: float = 98.0
+) -> tuple[torch.Tensor, torch.Tensor]:
+    if pts.ndim != 2 or pts.shape[1] != 3 or len(pts) == 0:
+        raise ValueError("pts must be a non-empty [N, 3] tensor")
+    if not 0 <= lo < hi <= 100:
+        raise ValueError("percentiles must satisfy 0 <= lo < hi <= 100")
     q = torch.tensor([lo / 100.0, hi / 100.0], device=pts.device, dtype=pts.dtype)
     mn = torch.quantile(pts, q[0], dim=0)
     mx = torch.quantile(pts, q[1], dim=0)
@@ -115,6 +121,10 @@ class Query3D:
 
     @torch.no_grad()
     def locate_3d(self, text: str, threshold: float = 0.6, min_hits: int = 16) -> dict:
+        if not 0.0 <= threshold <= 1.0:
+            raise ValueError("threshold must be between 0 and 1")
+        if min_hits < 1:
+            raise ValueError("min_hits must be at least 1")
         rel = self.relevance(text)                        # [N]
         hit_idx = torch.where(rel >= threshold)[0]
         if len(hit_idx) < min_hits:                       # threshold too strict -> top slice
