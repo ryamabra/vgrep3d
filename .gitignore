@@ -1,9 +1,15 @@
 __pycache__/
 *.pyc
 *.egg-info/
+.pytest_cache/
+.ruff_cache/
 .venv/
 build/
 dist/
+graphify-out/
+# local experiment output (historical tracked logs are retained)
+*_run*.log
+field_train*.log
 # scene artifacts
 **/vgrep3d/features/
 **/vgrep3d/*.pt
