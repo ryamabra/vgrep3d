@@ -88,6 +88,8 @@ If you want tight per-object 3D boxes from a semantic Gaussian field with dashca
 
 ## Setup
 
+For experiments intended to be compared or published, follow the [reproducibility checklist](docs/REPRODUCIBILITY.md).
+
 ### Requirements
 - Modal account (for GPU compute)
 - Python 3.11+
