@@ -7,7 +7,7 @@ name = "vgrep3d"
 version = "0.1.0"
 description = "Local-first open-vocabulary 3D search over Gaussian splats (SigLIP 2 + gsplat)"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
     "torch",
     "numpy",
@@ -18,8 +18,21 @@ dependencies = [
     "segment-anything",
 ]
 
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "ruff>=0.6",
+]
+
 [project.scripts]
 vgrep3d = "vgrep3d.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
